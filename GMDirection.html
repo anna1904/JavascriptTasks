@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- //for using connect to web host or with jsbin.com -->
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>// Polyfill
+(function(geolocation) {
+  // If browser recognizes geolocation, no need for polyfill
+  if ( geolocation ) return;
+  
+  // We'll cache the results
+  var cache;
+  
+  // Overwrite navigator.geolocation in old browsers.
+  // We'll create our own watchPosition
+  geolocation = navigator.geolocation = {};
+  
+   // write our polyfill
+  geolocation.watchPosition = function(successCallback, failureCallback) {
+    // If we already have results, send those through to the cb func.
+    if (cache) successCallback(cache);
+    
+    // We'll use the Google JS API to track the visitor
+    $.getScript('http://www.google.com/jsapi', function() {
+      var location = google.loader.ClientLocation;
+
+      // If the location couldn't be captured, trigger the failure cb.
+      if ( !location ) {
+        if ( failureCallback && typeof(failureCallback) === 'function' ) {
+          failureCallback();
+        } 
+        return;
+      }
+
+      // Grab the coordinates, and store them in the cache. 
+      cache = {
+        coords : {
+          'latitude': google.loader.ClientLocation.latitude, 
+          'longitude': google.loader.ClientLocation.longitude
+        }
+      };
+      
+      // Execute the success callback function, and send the cache obj through.
+      if ( cb && typeof(cb) === 'function') successCallback(cache);
+      
+    });
+  };
+     
+})(navigator.geolocation); // execute function, and pass either geo or undefined
+//start usual code
+    (function() {
+  if ( navigator.geolocation ) {
+    var coords = navigator.geolocation.watchPosition(
+      herewegoooo, 
+      function() {
+        // Failure
+        document.body.innerHTML = 'Sorry. We can\'t get your current location.'
+      },
+      { enableHighAccuracy: true }
+    );
+  }
+
+  function herewegoooo(coords) {
+    coords = coords.coords;
+
+    var latlng = new google.maps.LatLng(coords.latitude, coords.longitude),
+        myOptions = {
+          //zoom: 15,
+          //center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        },
+
+        map = new google.maps.Map(
+          document.querySelector("#map"), 
+          myOptions
+        ),
+          
+        directionsDisplay = new google.maps.DirectionsRenderer(),
+
+        directionsService = new google.maps.DirectionsService(),
+
+        request = {
+          origin: latlng, 
+          destination: 'Boryspil Airport', // replace with your own airport
+          travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+
+    directionsDisplay.setMap(map);
+
+    directionsService.route(request, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+      }
+    });
+  }
+})();
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwMuSDGoxLtmy0bodYrMrVFnN5eC_ANzM &callback=initMap"
+    async defer></script>
+  </body>
+</html>
