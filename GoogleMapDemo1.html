@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+//for using connect to web host or with jsbin.com
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      if ( navigator.geolocation ) { 
+       navigator.geolocation.watchPosition(function(pos) { 
+           var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+                  opts = {      
+                    zoom: 15,   
+                    center: coords,     
+                    mapTypeId: google.maps.MapTypeId.ROADMAP},  
+                map = new google.maps.Map(document.querySelector('#map'), opts); 
+                marker = new google.maps.Marker({     
+                  position: coords,      
+                  map: map   
+                }); 
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwMuSDGoxLtmy0bodYrMrVFnN5eC_ANzM &callback=initMap"
+    async defer></script>
+  </body>
+</html>
