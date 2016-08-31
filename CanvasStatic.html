@@ -1,0 +1,63 @@
+<html>
+<head>
+  <title></title>
+   <style> 
+   #canvas { background: #e3e3e3;}
+   #canvas2 { background: #e3e3e3;}
+   #canvas3 { background: #e3e3e3;}
+    </style> 
+</head>
+<body>
+
+  <canvas width="600" height="600" id="canvas"></canvas>
+  <canvas width="600" height="600" id="canvas2"></canvas>
+  <canvas width="600" height="600" id="canvas3"></canvas>
+
+</body>
+<script type="text/javascript">
+(function() {  
+
+
+  var canvas = document.getElementById('canvas'),
+      context = canvas.getContext('2d'); 
+     //context.fillStyle = "#000";// background color
+     context.strokeStyle = "#666";//color of line
+     context.lineWidth = 5.0;
+      context.beginPath();
+      context.moveTo(100,300);  //relocate xy
+      context.lineTo(300,300);  //brush line to 300 300
+      context.lineTo(200,150); 
+      context.closePath(); // go to the start of path
+      
+
+      //gradient
+      var bg = context.createLinearGradient(200, 150, 200, 300);
+        bg.addColorStop(0, "yellow");
+        bg.addColorStop(.5, "green");
+        bg.addColorStop(1, "red");
+        context.fillStyle = bg;
+
+      context.fill(); //call: fill with color
+  //     context.stroke();
+
+      var canvas = document.getElementById('canvas2'),
+          context = canvas.getContext('2d');
+          context.fillStyle = "#000";
+          context.lineWidth = 4;
+          context.strokeStyle = "#666";
+          context.beginPath();
+          // cp = control point // cp1x, cp1y, cp2x, cp2y, x, y 
+          context.bezierCurveTo(100, 100, 300, 400, 500, 100);
+          context.closePath();
+          context.fill();
+          context.stroke(); //call: draw the stroke
+
+      var canvas = document.getElementById('canvas3'), 
+          ctx = canvas.getContext('2d');
+          ctx.arc(100, 100, 100, 0, Math.PI * 2, true ); //arc(x, y, radius, startAngle, endAngle, anticlockwise) 
+          ctx.fill();
+
+
+   })();
+</script>
+</html>
